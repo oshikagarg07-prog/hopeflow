@@ -1,0 +1,483 @@
+<html>
+
+<head>
+    <title>Users Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="css/project.css" rel="stylesheet">
+
+    <!--<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>-->
+    <script>
+        $(document).ready(function () {
+            //alert();
+            $("#btnSignup").click(function () {
+                let obj = {
+                    url: "/signup-process",
+                    data: {
+                        txtEmail: $("#txtEmail").val(),
+                        txtPwd: $("#txtPwd").val(),
+                        utype: $("#utype").val()
+                    }
+                }
+                $.ajax(obj).then(function (respStr) {
+                    //alert(respStr);
+                    $("#msgSpan").html(respStr);
+                }).fail(function (err) {
+                    alert(err);
+                })
+            })
+        })
+
+        $(document).ready(function () {
+            $("#btnLogin").click(function () {
+                let obj2 = {
+                    url: "/login-process",
+                    data: {
+                        txtEmail2: $("#txtEmail2").val(),
+                        txtPwd2: $("#txtPwd2").val(),
+                    }
+                }
+                $.ajax(obj2).then(function (resp) {
+                    alert(resp);
+                    if (resp == "Donor") {
+                        location.href = "/angular-dash-donor"
+                        localStorage.setItem("activeuser", $("#txtEmail2").val());
+                    }
+                    else if(resp=="Admin"){
+                        location.href= "/angular-dash-admin"
+                        localStorage.setItem("activeuser", $("#txtEmail2").val());
+                    }
+                    else if(resp=="Needy"){
+                        location.href= "/angular-dash-needy"
+                        localStorage.setItem("activeuser", $("#txtEmail2").val());
+                    }
+                    else if(resp=="NGO"){
+                        location.href= "/angular-dash-ngo"
+                        localStorage.setItem("activeuser", $("#txtEmail2").val());
+                    }
+                }).fail(function (err) {
+                    alert(err);
+                })
+            })
+        })
+
+        $(document).ready(function () {
+            //alert();
+            $("#txtEmail").blur(function () {
+                let obj = {
+                    url: "/check-email-signup",
+                    data: {
+                        txtEmail: $("#txtEmail").val()
+                    }
+                }
+                $.ajax(obj).then(function (respStr) {
+                    //alert(respStr);
+                    $("#errEmail").html(respStr);
+                }).fail(function (err) {
+                    alert(err);
+                })
+            })
+        })
+    </script>
+
+    <!-- JQuery-signup -->
+
+    <script>
+        $(document).ready(function () {
+            //alert();
+            $("#txtEmail").blur(function () {
+                let email = $(this).val();
+                let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                let res = regex.test(email);
+                if (res == false)
+                    $("#errEmail").html("Invalid");
+                else
+                    $("#errEmail").html("Valid");
+            })
+            //---------------------------------------------------------
+            $("#txtPwd").blur(function () {
+                let pass = $(this).val();
+                let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#()])[A-Za-z\d@$!%*?&]{8,}$/;
+                let res = regex.test(pass);
+                if (res == true) {
+                    $("#errPwd").html("");
+                }
+                else {
+                    if (pass.length < 8)
+                        $("#errPwd").html("Password should contain minimum 8 letters.");
+                    else if (!/[A-Z]/.test(pass))
+                        $("#errPwd").html("There must be one Capital Letter.");
+                    else if (!/[a-z]/.test(pass))
+                        $("#errPwd").html("There must be one Small Letter.");
+                    else if (!/[0-9]/.test(pass))
+                        $("#errPwd").html("There must be one Number.");
+                    else if (!/[@$!%*?&#()]/.test(pass))
+                        $("#errPwd").html("There must be one Symbol.");
+                }
+
+            })
+        })
+
+        //--------------------------------------------------
+
+        $(document).ready(function () {
+
+            function checkForm() {
+                let email = $("#txtEmail").val();
+                let pass = $("#txtPwd").val();
+                let utype = $("#utype").val();
+
+                let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                let passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]).{8,}$/;
+
+                if (emailRegex.test(email) && passRegex.test(pass) && utype != "none") {
+                    $("#btnSignup").prop("disabled", false);
+                }
+                else {
+                    $("#btnSignup").prop("disabled", true);
+                }
+            }
+
+            // Call whenever email changes
+            $("#txtEmail").blur(function () {
+                checkForm();
+            });
+
+            //Call whenever password changes
+            $("#txtPwd").blur(function () {
+                checkForm();
+            })
+
+
+            // Call whenever user type changes
+            $("#utype").change(function () {
+                checkForm();
+            });
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg position-absolute w-100" style="background: transparent; z-index:1000;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success" href="/angular-dash-donor">Donor-Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success" href="/angular-dash-admin">Admin-Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success" href="/angular-dash-ngo">NGO-Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success" href="/angular-dash-needy">Needy-Dashboard</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light btn-lg" type="button" data-bs-toggle="modal"
+                            data-bs-target="#sigupModal">Signup</button>
+                    </li>
+
+                    <li class="nav-item me-2">
+                        <button class="btn btn-outline-light btn-lg" type="button" data-bs-toggle="modal"
+                            data-bs-target="#loginModal">Login</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+        <div class="row">
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/pics/carousel1.png" class="d-block w-100" style="height: 800px;" alt="">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/pics/carousel2.png" class="d-block w-100" style="height: 800px;" alt="">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/pics/carousel3.png" class="d-block w-100" style="height: 800px;" alt="">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="row fs-3" style="height: 350px; background-color: #3C3C59; color: white">
+            <div class="col-md-12 mt-5">
+                <center>
+                    <b style="font-size: 40px;">Need Medical Essentials? We Can Help.
+                       <br> Have Extras? Someone Needs Them.
+                    </b>
+                    <br><br>
+                    <i style="font-size: 20px;">Join our community where donors can share unused medicines and medical equipment, while those in need can easily find essential healthcare resources. 
+                    <br>Together, we extend support and make healthcare more accessible for everyone.
+                    </i>
+                </center>
+            </div>
+        </div>
+      
+        <div class="row mt-2 mx-1 justify-content-center">
+            <div class="col-md-3">
+                    <div class="card">
+                    <img src="pics/donate.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Donate Medicines</h5>
+                        <p class="card-text">
+                            Give unused, unexpired medicines a second chance. 
+                            Your donation can help someone receive the treatment they need.
+                        </p>
+                        <center><a href="explore.html" class="btn btn-primary">Explore</a></center>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="card">
+                    <img src="pics/equips.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Medical Equipment Support</h5>
+                        <p class="card-text">
+                            Donate or access wheelchairs, walkers, crutches, oxygen 
+                            concentrators, and other essential medical equipment.
+                        </p>
+                        <center><a href="explore.html" class="btn btn-primary">Explore</a></center>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="card">
+                    <img src="pics/connecft.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Connecting People</h5>
+                        <p class="card-text">
+                            We bring generous donors and people in need together through one
+                            trusted platform, making it easier to give and receive help.
+                        </p>
+                        <center><a href="explore.html" class="btn btn-primary">Explore</a></center>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 ">
+                    <div class="card">
+                    <img src="pics/save.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Giving Hope</h5>
+                        <p class="card-text">
+                            Every donation reduces medical waste and brings hope to someone in need.
+                            Small acts of kindness can make a big difference.
+                        </p>
+                        <center><a href="explore.html" class="btn btn-primary">Explore</a></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-1 fs-3" style="line-height: 60px; background-color: #3C3C59; color: white">
+            <div class="col-md-12">
+                <center>
+                    <b id="txtMeet">Meet Us</b>
+                </center>
+            </div>
+        </div>
+      
+        <div class="row mt-3">
+            <div class="container col-md-3">
+                <div class="card shadow">
+                    <div class="card-body" style="background-color: green">
+                        <div class="row" style="height: 250px;">
+                            <div class="col-md-5">
+                                <center>
+                                     <img src="/pics/why1.png" style="width: 400px; height: 300px;">
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container col-md-8">
+                <div class="card shadow">
+                    <div class="card-body" style="background-color: #F0F6EF">
+                        <div class="row" style="height: 250px;">
+                            <div class="col-12">
+                                <center>
+                                    <span style="font-size:150%;font-family:Copperplate,fantasy">Under the Guidance of</span>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="container col-md-3">
+                <div class="card shadow">
+                    <div class="card-body" style="background-color: green">
+                        <div class="row" style="height: 250px;">
+                            <div class="col-12">
+                                <center>
+                                    <img src="/pics/why1.png" style="width: 400px; height: 300px;">
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container col-md-8">
+                <div class="card shadow">
+                    <div class="card-body" style="background-color: #F0F6EF">
+                        <div class="row" style="height: 250px;">
+                            <div class="col-12">
+                                <center>
+                                    <span style="font-size:150%;font-family:Copperplate,fantasy">Developed by</span>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 fs-3" style="line-height: 60px; background-color: #3C3C59; color: white">
+            <div class="col-md-12">
+                <center>
+                    <b id="txtReach">Reach US</b>
+                </center>
+            </div>
+        </div>
+
+         <div class="row bg-white mt-1 fs-3" style="height: 350px;">
+            <div class="col-md-12">
+                <center>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3447.880571595966!2d74.94975317501695!3d30.21195591061563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391732a4f07278a9%3A0x4a0d6293513f98ce!2sBanglore%20Computer%20Education!5e0!3m2!1sen!2sin!4v1780899942460!5m2!1sen!2sin" width="1300" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </center>
+            </div>
+        </div>
+
+        <div class="row mt-1 fs-5" style="line-height: 60px; background-color: #3C3C59; color: white">
+            <div class="col-md-12">
+                <center>
+                    <b id="txtCopy">copyright &copy;  </b>
+                </center>
+            </div>
+        </div>
+    
+
+    <!-- Signup Modal -->
+
+    <div class="modal fade" id="sigupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary bg-opacity-75">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Signup Here</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/signup" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <div id="titlepic"></div>
+                            <label for="txtEmail" class="form-label">Email Id</label>
+                            <input type="email" class="form-control" id="txtEmail" aria-describedby="errEmail">
+                            <div id="errEmail" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPwd" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="txtPwd">
+                            <div id="errPwd" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="utype" class="form-label">User Type</label>
+                            <div>
+                                <select class="form-select" name="utype" id="utype" aria-label="Default select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="Needy">Needy</option>
+                                    <option value="NGO">NGO</option>
+                                    <option value="Donor">Donor</option>
+                                    <option value="Admin">Admin</option>
+                                    <!-- <option value="3">Three</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <center>
+                                <button type="button" class="btn btn-danger" id="btnSignup" disabled>Signup Now</button>
+                                <br>
+                                <span id="msgSpan"></span>
+                            </center>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success bg-opacity-75">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Login Here</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/signup" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <div id="titlepic"></div>
+                            <label for="txtEmail2" class="form-label">Email Id</label>
+                            <input type="email" class="form-control" id="txtEmail2" aria-describedby="errEmail">
+                            <div id="errEmail" class="form-text">Fill Correct Email Id.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPwd2" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="txtPwd2">
+                            <div id="errPwd" class="form-text">*</div>
+                        </div>
+
+                        <div>
+                            <center>
+                                <button type="button" class="btn btn-danger" id="btnLogin">Login</button>
+                            </center>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

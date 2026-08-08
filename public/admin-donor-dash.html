@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+    <script>
+        let myModule=angular.module("moduleKuch",[]);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http)
+        {    
+            $scope.doShowDonor = function()
+                {
+                    let url = "/fetch-donor";
+                    $http.get(url).then(function (resp) {
+                        $scope.jsonArray = resp.data;
+                    }, function (err) {
+                        alert(err);
+                    });
+                }
+        })
+    </script>
+  </head>
+  <body ng-app="moduleKuch" ng-controller="controllerKuch" ng-init="doShowDonor();"> 
+    <center>
+        <input type="button" ng-click="doShowDonor();" value="Fetch All Record">
+
+        <table width="1000" border="1">
+            <tr>
+                <th>Sr.No.</th><th>Emailid</th><th>First Name</th><th>Last Name</th><th>Mobile No.</th><th>Address</th><th>City</th><th>Adhaar</th><th>Picture</th>
+            </tr>
+            <tr ng-repeat="obj in jsonArray">
+                <td>{{$index+1}}</td>
+                <td>{{obj.emailid}}</td>
+                <td>{{obj.fname}}</td>
+                <td>{{obj.lname}}</td>
+                <td>{{obj.mobile}}</td>
+                <td>{{obj.address}}</td>
+                <td>{{obj.city}}</td>
+                <td>
+                    <center>
+                        <img src={{obj.acardpath}} width="50" height="50" alt="">
+                    </center>
+                </td>
+                <td>
+                    <center>
+                        <img src={{obj.picpath}} width="50" height="50" alt="">
+                    </center>
+                </td>
+            </tr>
+        </table>
+    </center>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>

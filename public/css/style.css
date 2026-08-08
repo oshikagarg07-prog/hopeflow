@@ -1,0 +1,27 @@
+.icons{
+    width: 80px;
+    height: 80px;
+    text-align: center;
+}
+
+.carousel-img {
+    height: 350px;      
+    object-fit: cover;  
+}
+
+#donorimg{
+    width: 50px; height: 50px;
+    float: left;
+    background-color: #FCC6BB;
+    /*opacity: 20%;*/
+    margin-top: 10px; float: left;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#txtDonor{
+    width: 630px; height: 50px;
+    /* background-color: aliceblue;  */
+    margin-top: 10px; float: left;
+    margin-left: 5px;
+}

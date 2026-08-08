@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+    <script>
+        let myModule = angular.module("moduleKuch", []);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http) {
+            $scope.doShowAllCities = function () {
+                let url = "/fetch-distinct-cities";
+                $http.get(url).then(function (resp) {
+                    //alert(JSON.stringify(resp.data))
+                    $scope.jsonArrayCities = resp.data;
+                }, function (err) {
+                    alert(err);
+                });
+            }
+            //-----------------------------------------
+            $scope.doShowSelMed = function () {
+                //alert($scope.selMedicines);
+                let url = "/fetch-distinct-med?cityKuch=" + $scope.selCities +
+                           "&medKuch=" + $scope.selMedicines;
+                $http.get(url).then(function (resp) {
+                    $scope.jsonArrayMed = resp.data;
+                    //console.log(resp.data);
+                }, function (err) {
+                    alert(err);
+                })
+            }
+            //--------------------------------------------
+            $scope.doFetchMed= function(){
+                let city= $scope.selCities;
+                let url= "/fetch-in-city-med?city=" +city;
+                $http.get(url).then(function(resp){
+                   // console.log(resp.data);                   
+                    $scope.jsonArrayMed= resp.data;
+                },function(err){
+                    alert(err);
+                });
+            }
+            
+            //---------------------------------------------
+            $scope.doShowDetails = function (obj) {
+                //alert(JSON.stringify(resp.data));
+                let url = "/show-all-med";
+                $http.get(url).then(function (resp) {
+                    $scope.jsonArray = resp.data;
+                }, function (err) {
+                    alert(err);
+                })
+                $scope.ObjOne = obj;
+            }
+            //--------------------------------------------
+            $scope.doContactDonor = function (obj) {
+                //alert(JSON.stringify(resp.data));
+                let url = "/donor-contact-details?emailKuch=" + obj.emailid;
+                $http.get(url).then(function (resp) {
+                    //console.log(resp.data);
+                    $scope.ObjOne = resp.data[0];
+                }, function (err) {
+                    alert(err);
+                })
+            }
+        })
+    </script>
+    <script>
+        function logout() {
+            alert("Are You Sure?");
+            localStorage.removeItem("activeuser");
+            location.href = "index.html"
+        }
+    </script>
+
+
+</head>
+
+<body ng-app="moduleKuch" ng-controller="controllerKuch" ng-init="doShowAllCities()">
+   <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav ms-auto" style="font-size: 20px;">
+                    <button class="btn btn-primary" onclick="logout()" id="logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <label for="City" class="form-label">City name</label>
+          <input  list="city-list" ng-model="selCities" placeholder="Type your city name" class="form-control"  ng-blur="doFetchMed()" />
+          <datalist id="city-list">
+            <option ng-repeat="obj in jsonArrayCities" value="{{obj.city}}"></option>
+          </datalist>
+        </div>
+        <div class="col-md-4">
+          <label for="Med_name" class="form-label">Medicine Available in your city</label>
+          <input list="med-list" ng-model="selMedicines" placeholder="Type med name to find" class="form-control"/>
+          <datalist id="med-list">
+            <option ng-repeat="obj in jsonArrayMed" value="{{obj.medname}}"></option>
+          </datalist>
+        </div>
+        <div class="col-md-4">
+          <br />
+          <input type="button" class="form-control btn btn-outline-success" aria-describedby="emailHelp" value="Search Medicines" ng-click="doShowSelMed()"/>
+        </div>
+      </div>
+
+    <hr>
+    <!-- Cards -->
+    <div class="container">
+        <div class="row g-3 mt-3">
+
+            <div class="col-md-3" ng-repeat="obj in jsonArrayMed">
+                <div class="card  border border-primary">
+                    <img ng-src="{{obj.picurl}}" height="150" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <center>
+                            <h5 class="card-title">{{obj.medname}}</h5>
+                            <p>{{obj.company}}</p>
+                        </center>
+                        <div class="row">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModal"
+                                ng-click="doShowDetails(obj)">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <center>
+                            <div>
+                                <img ng-src="{{ObjOne.picurl}}" width="200" height="200px" alt="">
+                            </div>
+                        </center>
+                    </p>
+                    <p>Email Id: {{ObjOne.emailid}}</p>
+                    <p>Company: {{ObjOne.company}}</p>
+                    <p>Expiry Date: {{ObjOne.expdate}}</p>
+                    <p>Quantity: {{ObjOne.qty}}</p>
+                    <p>Packaging: {{ObjOne.packing}}</p>
+                    <p>Other Information: {{ObjOne.info}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ContactModal"
+                        ng-model="emailid" ng-click="doContactDonor(ObjOne)">Contact Donor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donor Contact Modal -->
+    <div class="modal fade" id="ContactModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Donor Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <center>
+                            <div>
+                                <img ng-src="{{ObjOne.acardpath}}" width="200" height="200px" alt="">
+                                <img ng-src="{{ObjOne.picpath}}" width="200" height="200px" alt="">
+                            </div>
+                        </center>
+                    </p>
+                    <p>Name: {{ObjOne.fname}}</p>
+                    <p>Mobile Number: {{ObjOne.mobile}}</p>
+                    <p>Address: {{ObjOne.address}}</p>
+                    <p>City: {{ObjOne.city}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

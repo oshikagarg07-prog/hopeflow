@@ -1,0 +1,11 @@
+#titlepic{
+    /* border: 1px black solid; */
+    width: 100px; height: 100px;
+    background-image: url(../pics/signup-logo.png);
+    margin: auto;
+    margin-top: 60px;
+    background-size: contain; border-radius: 50%;
+    /* background-repeat: no-repeat; (incase image is small so it repeats) */
+    /* background-size: cover; */
+}
+

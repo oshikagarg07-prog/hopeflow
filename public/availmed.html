@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avail Medicine</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    function doShowPrev(fileCtrl, Medprev) {
+      const file = fileCtrl.files[0];
+      if (file) {
+        Medprev.src = URL.createObjectURL(file);
+      }
+    }
+  </script>
+
+  <script>
+        function setemail() {
+            document.getElementById("txtEmail").value = localStorage.getItem("activeuser");
+            document.getElementById("txtEmail").readOnly = true;
+        }
+    </script>
+    <script>
+        function logout() {
+            localStorage.removeItem("activeuser");
+            location.href = "index.html"
+        }
+    </script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body onload="setemail();">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Website</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav ms-auto" style="font-size: 20px;">
+          <button class="btn btn-primary" onclick="logout()" id="logout">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <hr>
+  <center>
+    <h4>AVAIL MEDICINE DETAILS</h4>
+  </center>
+  <hr>
+  <div class="d-flex justify-content-center">
+  <form class="row g-3 col-8" action="/avail-med" enctype="multipart/form-data" method="post">
+    <div class="row">
+      <!-- Left side -->
+      <div class="col-md-4 text-center">
+        <p><label>Upload Medicine Image:</label>
+          <input type="file" name="medPic" onchange="doShowPrev(this,Medprev)" required>
+          <br>
+          <img src="" id="Medprev" alt="" width="100" height="100">
+        </p>
+      </div>
+      <!-- Right Side -->
+      <div class="col-md-8">
+        <div class="col-md-12">
+          <label for="txtEmail" class="form-label">Email</label>
+          <input type="email" class="form-control" name="txtEmail" id="txtEmail">
+        </div>
+        <div class="col-md-4">
+          <label for="txtMed" class="form-label">Medicine Name</label>
+          <input type="text" class="form-control" name="txtMed" id="txtMed">
+        </div>
+        <div class="col-md-4">
+          <label for="txtCompany" class="form-label">Company</label>
+          <input type="text" class="form-control" name="txtCompany" id="txtCompany">
+        </div>
+        <div class="col-6">
+          <label for="txtExp" class="form-label">Expiry Date</label>
+          <input type="date" class="form-control" name="txtExp" id="txtExp">
+        </div>
+        <div class="col-md-6">
+          <label for="txtPack" class="form-label">Packing</label>
+          <div>
+            <select class="form-select" name="txtPack" id="txtPack" aria-label="Default select example">
+              <option selected>Open this select menu</option>
+              <option value="Tablets">Tablets</option>
+              <option value="Bottle">Bottle</option>
+              <option value="Sachet">Sachet</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <label for="txtQty" class="form-label">Quantity</label>
+          <select name="txtQty" id="txtQty" class="form-select">
+            <option>Select</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="col-md-9">
+          <label for="txtInfo" class="form-label">Other Information</label>
+          <input type="textarea" class="form-control" name="txtInfo" id="txtInfo">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary" formaction="/avail-med-btn">Avail</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

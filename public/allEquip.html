@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+    <script>
+        let myModule = angular.module("moduleKuch", []);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http)
+        {
+            $scope.jsonArray = [];
+            $scope.doShow= function(emailidKuch){
+                let url="/show-all-equip";
+                $http.get(url).then(function(resp){
+                    //console.log(resp.data);
+                    $scope.jsonArray= resp.data;
+                },function(err){
+                    alert(err);
+                });
+            }
+            //---------------------------------------------------
+            $scope.doShowDetails= function(obj){
+                //alert(JSON.stringify(obj));
+                $scope.ObjOne=obj;
+            }
+
+        })
+    </script>
+  </head>
+  <body ng-app="moduleKuch" ng-controller="controllerKuch" ng-init="doShow()">
+    
+
+    <!-- Cards -->
+    <div class="container">
+        <div class="row g-3 mt-3">
+    
+            <div class="col-md-3" ng-repeat="obj in jsonArray">
+                <div class="card  border border-primary">
+                    <img ng-src="{{obj.pic1url}}" height="150" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <center>
+                            <h5 class="card-title">{{obj.equipment}}</h5>
+                        </center>
+                        <div class="row">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModal" ng-click="doShowDetails(obj)">Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+            <center>
+                <div>
+                   <img ng-src="{{ObjOne.pic1url}}" width="200px" height="200px" alt="">
+                   <img ng-src="{{ObjOne.pic2url}}" width="200px" height="200px" alt="">
+                </div>
+            </center>
+        </p>
+        <p>
+            Email Id: {{ObjOne.emailid}}
+        </p>
+        <p>
+            Company:{{ObjOne.equiptype}}
+        </p>
+        <p>
+            Quantity: {{ObjOne.equipcondition}}
+        </p>
+        <p>
+            Other Information: {{ObjOne.info}}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>

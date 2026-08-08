@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+
+
+    <script>
+        let myModule = angular.module("moduleKuch", []);
+        let myController = myModule.controller("controllerKuch", function ($scope, $http) {
+
+            $scope.jsonArray = [];
+            $scope.doUpdatePwd = function () {
+                //alert($scope.emailidKuch);
+                let url = "/update-pwd?emailidKuch=" + $scope.emailidKuch +
+                    "&oldpwdKuch=" + $scope.oldpwd +
+                    "&newpwdKuch=" + $scope.newpwd;
+                console.log(url);
+                $http.get(url).then(function (resp) {
+                    alert(resp.data);
+                    //console.log(resp.data);
+                }, function (err) {
+                    alert(err);
+                });
+            }
+        })
+    </script>
+    <script>
+        function setemail() {
+            document.getElementById("txtEmail").value = localStorage.getItem("activeuser");
+            document.getElementById("txtEmail").readOnly = true;
+        }
+    </script>
+    <script>
+        function logout() {
+            alert("R U Sure?");
+            localStorage.removeItem("activeuser");
+            location.href = "index.html"
+
+        }
+    </script>
+
+</head>
+
+<body ng-app="moduleKuch" ng-controller="controllerKuch" onload="setemail();">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Website</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav ms-auto" style="font-size: 20px;">
+                    <button class="btn btn-primary" onclick="logout()" id="logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="row mt-5 col-md-10">
+                <div class="col-sm-3 mb-3 mb-sm-0">
+                    <div class="card border border-danger">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <center><i class="fa-mosaic fa-solid fa-circle-user"
+                                        style="color: rgb(206, 17, 17); font-size: 100px;"></i></center>
+                            </p>
+                            <center>
+                                <a href="needy-profile.html" class="btn btn-danger">Profile</a>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card border border-success">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <center><i class="fa-solid fa-capsules"
+                                        style="color: rgb(12, 93, 6); font-size: 100px;"></i></center>
+                            </p>
+                            <center>
+                                <a href="medFinder.html" class="btn btn-success">Find Medicine</a>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card border border-warning">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <center><i class="fa-mosaic fa-solid fa-wheelchair"
+                                        style="color: rgb(255, 212, 59); font-size: 100px;"></i></center>
+                            </p>
+                            <center>
+                                <a href="equipFinder.html" class="btn btn-warning">Find Equipment</a>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card border border-warning">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <center><i class="fa-solid fa-building-ngo"
+                                        style="color: rgb(19, 12, 183); font-size: 100px;"></i></center>
+                            </p>
+                            <center>
+                                <a href="NGO-finder.html" class="btn btn-primary">Contact NGOs</a>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <center>
+                    <div class="col-sm-3 mt-3">
+                        <div class="card border border-dark">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <center><i class="fa-solid fa-gear"
+                                            style="color: rgb(99, 14, 126); font-size: 100px;"></i></center>
+                                </p>
+                                <center>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                                        style="background-color: blueviolet;"
+                                        data-bs-target="#settingsModal">Settings</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary bg-opacity-75">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Settings</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/update-pwd" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <div id="titlepic"></div>
+                            <label for="txtEmail" class="form-label">Email Id</label>
+                            <input type="email" class="form-control" ng-model="emailidKuch" id="txtEmail"
+                                aria-describedby="errEmail">
+                            <div id="errEmail" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPwd" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" ng-model="oldpwd" name="txtPwd" id="txtPwd">
+                            <div id="errPwd" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtNewPwd" class="form-label">New Password</label>
+                            <input type="password" class="form-control" ng-model="newpwd" name="txtNewPwd"
+                                id="txtNewPwd">
+                            <div id="errNewPwd" class="form-text"></div>
+                        </div>
+                        <div>
+                            <center>
+                                <button type="button" class="btn btn-danger" ng-click="doUpdatePwd();">Update
+                                    Password</button>
+                                <br>
+                                <span id="msgSpan"></span>
+                            </center>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
