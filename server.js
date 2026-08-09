@@ -23,6 +23,10 @@ app.get("/signup-process",function(req,resp){
     let usertype=req.query.utype;
     
     mysqlCon.query("select * from userspro where emailid=?",[email],function(err,result){
+        if(err)
+        {
+            return resp.send(err.message);
+        }
         if(result.length==1)
         {
             resp.send("Already registered!");
