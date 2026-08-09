@@ -25,6 +25,7 @@ app.get("/signup-process",function(req,resp){
     mysqlCon.query("select * from userspro where emailid=?",[email],function(err,result){
         if(err)
         {
+            console.error("Error:" , err);
             return resp.send(err.message);
         }
         if(result.length==1)
@@ -34,10 +35,14 @@ app.get("/signup-process",function(req,resp){
         else 
         {
             mysqlCon.query("insert into userspro values(?,?,?,current_date,1)",[email,pwd,usertype],function(err){
-               if(err==null)
+               if(err==null){
                   resp.send("Signed in Successfully!");
-               else
+               }
+               else{
+                  console.error("error:", err);
+                  return
                   resp.send(err.message);
+               }
             })
         }
     })
