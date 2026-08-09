@@ -55,13 +55,15 @@ cloudinary.config({
 
 //----------------------Mysql--------------------------------------
 let url=process.env.AIVEN_URL;
-let mysqlCon=mysql.createConnection({uri:url,dateStrings:true});
-mysqlCon.connect(function(err){
-    if(err==null)
-         console.log("Connected Successfully");
-    else 
-         console.log(err.message);
-})
+
+const mysql= mysql.createPool(
+    {
+        uri: url,
+        dateStrings: true,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    });
 
 //-------------------Login check----------------------------------
 app.get("/login-process",function(req,resp){
