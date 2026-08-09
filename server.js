@@ -56,7 +56,7 @@ cloudinary.config({
 //----------------------Mysql--------------------------------------
 let url=process.env.AIVEN_URL;
 const mysql= require("mysql2");
-const mysql= mysql.createPool(
+const mysqlCon = mysql.createPool(
     {
         uri: url,
         dateStrings: true,
