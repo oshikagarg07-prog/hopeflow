@@ -23,11 +23,6 @@ app.get("/signup-process",function(req,resp){
     let usertype=req.query.utype;
     
     mysqlCon.query("select * from userspro where emailid=?",[email],function(err,result){
-        if(err)
-        {
-            console.error("Error:" , err);
-            return resp.send(err.message);
-        }
         if(result.length==1)
         {
             resp.send("Already registered!");
@@ -35,14 +30,10 @@ app.get("/signup-process",function(req,resp){
         else 
         {
             mysqlCon.query("insert into userspro values(?,?,?,current_date,1)",[email,pwd,usertype],function(err){
-               if(err==null){
+               if(err==null)
                   resp.send("Signed in Successfully!");
-               }
-               else{
-                  console.error("error:", err);
-                  return
+               else
                   resp.send(err.message);
-               }
             })
         }
     })
